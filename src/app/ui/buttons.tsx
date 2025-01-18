@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { playSynthTone } from '../../utils/audioSynth';
 
 const tones = [
@@ -13,9 +13,18 @@ const tones = [
 
 export default function Buttons() {
   const activeToneRef = useRef<() => void | null>(null);
+  const [a, setA] = useState(0);
+  const [d, setD] = useState(0);
+  const [s, setS] = useState(0.8);
+  const [r, setR] = useState(0);
+
+  const handleAChange = (e: React.ChangeEvent<HTMLInputElement>) => { setA(Number(e.target.value)); };
+  const handleDChange = (e: React.ChangeEvent<HTMLInputElement>) => { setD(Number(e.target.value)); };
+  const handleSChange = (e: React.ChangeEvent<HTMLInputElement>) => { setS(Number(e.target.value)); };
+  const handleRChange = (e: React.ChangeEvent<HTMLInputElement>) => { setR(Number(e.target.value)); };
 
   const handleMouseDown = (frequency: number) => {
-    activeToneRef.current = playSynthTone(frequency); // Start tone
+    activeToneRef.current = playSynthTone(frequency, a, d, s, r); // Start tone
   };
 
   const handleMouseUp = () => {
@@ -28,6 +37,12 @@ export default function Buttons() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <h1 className="text-3xl font-bold mb-6">Synth Tone Buttons</h1>
+      <div className="flex justify-center">
+        <input type="range" min="0" max="5" onChange={handleAChange}/>
+        <input type="range" min="0" max="5" onChange={handleDChange}/>
+        <input type="range" min="0" max="5" onChange={handleSChange}/>
+        <input type="range" min="0" max="5" onChange={handleRChange}/>
+      </div>
       <div className="grid grid-cols-3 gap-4">
         {tones.map((tone) => (
           <button
