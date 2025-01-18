@@ -1,5 +1,6 @@
 'use client';
-import { createSynthTone } from '../../utils/audioSynth';
+import React, { useRef } from 'react';
+import { playSynthTone } from '../../utils/audioSynth';
 
 const tones = [
   { label: '1', frequency: 261.63 }, // C4
@@ -11,8 +12,17 @@ const tones = [
 ];
 
 export default function Buttons() {
-  const playTone = (frequency: number) => {
-    createSynthTone(frequency);
+  const activeToneRef = useRef<() => void | null>(null);
+
+  const handleMouseDown = (frequency: number) => {
+    activeToneRef.current = playSynthTone(frequency); // Start tone
+  };
+
+  const handleMouseUp = () => {
+    if (activeToneRef.current) {
+      activeToneRef.current(); // Stop tone
+      activeToneRef.current = null;
+    }
   };
 
   return (
@@ -23,8 +33,9 @@ export default function Buttons() {
           <button
             key={tone.label}
             className="px-6 py-3 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 focus:outline-none"
-            onMouseDown={() => playTone(tone.frequency)
-            }
+            onMouseDown={() => handleMouseDown(tone.frequency)}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp} // Handle mouse leaving the button
           >
             {tone.label}
           </button>

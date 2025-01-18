@@ -1,20 +1,18 @@
-export function createSynthTone(frequency: number) {
-  const audioContext = new (window.AudioContext)();
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
+import * as Tone from 'tone';
 
-  // Configure oscillator
-  oscillator.type = 'square'; // Change to 'square', 'sawtooth', or 'triangle' for different sounds
-  oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+export function playSynthTone(frequency: number) {
+  const synth = new Tone.PolySynth(Tone.Synth, {
+    envelope: {
+      attack: 0.01,   // Time for the note to reach full volume
+      decay: 0.2,    // Time for the note to transition to sustain level
+      sustain: 0.8,  // Volume level while the note is held
+      release: 6,    // Time for the note to fade out after release
+    },
+  }).toDestination();
 
-  // Configure gain for smooth release
-  gainNode.gain.setValueAtTime(0.5, audioContext.currentTime); // Volume
-  gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1); // Fade out
-
-  // Connect nodes and start
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
-
-  oscillator.start();
-  oscillator.stop(audioContext.currentTime + 1); // Play for 1 second
+  // Trigger the note
+  synth.triggerAttack(frequency);
+  return () => {
+    synth.triggerRelease(frequency) ;
+  };
 }
