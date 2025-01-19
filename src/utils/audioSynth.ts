@@ -10,6 +10,8 @@ export function playSynthTone(frequency: number, a: number, d: number, s: number
     },
   }).toDestination();
 
+  synth.volume.value = -10; // Reduce volume to prevent clipping
+
   // Trigger the note
   synth.triggerAttack(frequency);
   return () => {

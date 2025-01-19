@@ -38,10 +38,10 @@ export default function Buttons() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <h1 className="text-3xl font-bold mb-6">Synth Tone Buttons</h1>
       <div className="flex justify-center">
-        <input type="range" min="0" max="5" onChange={handleAChange}/>
-        <input type="range" min="0" max="5" onChange={handleDChange}/>
-        <input type="range" min="0" max="5" onChange={handleSChange}/>
-        <input type="range" min="0" max="5" onChange={handleRChange}/>
+        <input type="range" min="0.01" max="5" step="0.01" defaultValue="0.01" onChange={handleAChange}/>
+        <input type="range" min="0.01" max="5" step="0.01" defaultValue="0.01" onChange={handleDChange}/>
+        <input type="range" min="0.01" max="1" step="0.01" defaultValue="0.8" onChange={handleSChange}/>
+        <input type="range" min="0.01" max="20" step="0.01" defaultValue="0.01" onChange={handleRChange}/>
       </div>
       <div className="grid grid-cols-3 gap-4">
         {tones.map((tone) => (
